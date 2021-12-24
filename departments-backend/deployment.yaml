@@ -1,0 +1,66 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: departments-backend-service
+  labels:
+    app: departments-backend
+spec:
+  type: ClusterIP
+  selector:
+    app: departments-backend
+  ports:
+    - port: 80
+      targetPort: 8080
+      name: http
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: departments-backend-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+    - host: "csas.micro.ivandelic.com"
+      http:
+        paths:
+          - path: /department-manager(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: departments-backend-service
+                port:
+                  number: 80
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: departments-backend-deployment
+  labels:
+    app: departments-backend
+spec:
+  selector:
+    matchLabels:
+      app: departments-backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: departments-backend
+        version: v1
+    spec:
+      containers:
+        - name: departments-backend
+          image: 'fra.ocir.io/frsxwtjslf35/csas/departments-backend:latest'
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATA_MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-native-connection-string
+                  key: uri
+      imagePullSecrets:
+        - name: ocirsecret
