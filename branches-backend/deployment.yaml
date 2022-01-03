@@ -58,10 +58,10 @@ spec:
             - containerPort: 8080
           env:
             - name: ORACLEDB_HOST
-                valueFrom:
-                  secretKeyRef:
-                    name: oracle-db
-                    key: host
+              valueFrom:
+                secretKeyRef:
+                  name: oracle-db
+                  key: host
             - name: ORACLEDB_PORT
               valueFrom:
                 secretKeyRef:

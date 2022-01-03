@@ -54,14 +54,16 @@ spec:
       containers:
         -
           name: departments-frontend
-          image: 'fra.ocir.io/frsxwtjslf35/csas/departments-frontend:latest'
+          image: 'fra.ocir.io/frsxwtjslf35/csas/general-frontend:latest'
           imagePullPolicy: Always
           ports:
             -
               containerPort: 3000
           env:
-            - name: REACT_APP_API_URL
-              value: http://csas-api.micro.ivandelic.com/department-manager
+            - name: REACT_APP_DEPARTMENT_API_URL
+              value: http://csas.micro.ivandelic.com/department-manager
+            - name: REACT_APP_BRANCH_API_URL
+              value: http://csas.micro.ivandelic.com/branch-manager
       imagePullSecrets:
         -
           name: ocirsecret
