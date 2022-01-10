@@ -1,0 +1,17 @@
+version: 0.1             
+component: build
+timeoutInSeconds: 1000
+shell: bash
+
+steps:
+  - type: Command
+    command: |
+      docker build -t fra.ocir.io/frsxwtjslf35/csas/general-frontend ./general-frontend
+
+outputArtifacts:
+  - name: general-frontend
+    type: DOCKER_IMAGE
+    location: fra.ocir.io/frsxwtjslf35/csas/general-frontend
+  - name: general-frontend-deployment.yaml
+    type: BINARY
+    location: ${OCI_PRIMARY_SOURCE_DIR}/general-frontend/deployment.yaml
